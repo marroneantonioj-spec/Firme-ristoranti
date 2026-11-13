@@ -455,9 +455,9 @@
             balanceMode: 'global', // 'global' | 'split'
             globalLoaded: 20,      // Firme caricate nel monte globale
             restaurants: [
-                { id: 'r1', name: 'Ristorante 1', color: 'indigo', hex: '#4F46E5', bgLight: '#EEF2FF', textDark: '#3730A3', border: '#C7D2FE', loaded: 10 },
-                { id: 'r2', name: 'Ristorante 2', color: 'emerald', hex: '#059669', bgLight: '#ECFDF5', textDark: '#065F46', border: '#A7F3D0', loaded: 10 },
-                { id: 'r3', name: 'Ristorante 3', color: 'amber', hex: '#D97706', bgLight: '#FFFBEB', textDark: '#92400E', border: '#FDE68A', loaded: 10 }
+                { id: 'r1', name: 'Grotta Marinara', color: 'indigo', hex: '#4F46E5', bgLight: '#EEF2FF', textDark: '#3730A3', border: '#C7D2FE', loaded: 10 },
+                { id: 'r2', name: 'Zio Gianfester', color: 'emerald', hex: '#059669', bgLight: '#ECFDF5', textDark: '#065F46', border: '#A7F3D0', loaded: 10 },
+                { id: 'r3', name: 'Meridiano 2.0 / Holiday', color: 'amber', hex: '#D97706', bgLight: '#FFFBEB', textDark: '#92400E', border: '#FDE68A', loaded: 10 }
             ],
             selectedRestaurantId: 'r1',
             entries: [] // { id, restaurantId, date: 'YYYY-MM-DD', meal: 'Pranzo'|'Cena', note: '', timestamp }
@@ -475,11 +475,20 @@
                 const raw = localStorage.getItem(STORAGE_KEY);
                 if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
                 const parsed = JSON.parse(raw);
-                // Merge sicuro per retrocompatibilità
+                
+                // Aggiorna automaticamente i nomi se erano rimasti quelli generici ("Ristorante 1", ecc.)
+                const mergedRestaurants = (parsed.restaurants || DEFAULT_STATE.restaurants).map((r, idx) => {
+                    const def = DEFAULT_STATE.restaurants[idx];
+                    if (def && (!r.name || r.name === `Ristorante ${idx + 1}`)) {
+                        return { ...def, ...r, name: def.name };
+                    }
+                    return r;
+                });
+
                 return {
                     ...JSON.parse(JSON.stringify(DEFAULT_STATE)),
                     ...parsed,
-                    restaurants: parsed.restaurants || DEFAULT_STATE.restaurants
+                    restaurants: mergedRestaurants
                 };
             } catch (e) {
                 console.error('Errore nel caricamento da localStorage:', e);
