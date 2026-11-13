@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firme Ristoranti - Registro Pasti & Calendario</title>
+    <!-- Configurazione PWA per PWABuilder / APK -->
+    <meta name="theme-color" content="#4F46E5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%234F46E5'/%3E%3Cpath d='M160 120v110c0 22 18 40 40 40h10v122c0 11 9 20 20 20s20-9 20-20V270h10c22 0 40-18 40-40V120h-25v95h-15v-95h-25v95h-15v-95h-25v95h-15v-95h-20zm185 0c-25 0-45 25-45 65v65c0 17 13 30 30 30h5v112c0 11 9 20 20 20s20-9 20-20V140c0-11-9-20-20-20h-10z' fill='white'/%3E%3C/svg%3E">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter -->
@@ -1112,6 +1118,11 @@
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('checkin-date').value = getTodayISO();
             renderAll();
+
+            // Registrazione Service Worker per supporto PWA / APK
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
         });
     </script>
 </body>
