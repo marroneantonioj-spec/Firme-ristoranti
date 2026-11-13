@@ -22,33 +22,12 @@
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        r1: {
-                            light: '#EEF2FF',
-                            DEFAULT: '#4F46E5',
-                            dark: '#3730A3',
-                            border: '#C7D2FE'
-                        },
-                        r2: {
-                            light: '#ECFDF5',
-                            DEFAULT: '#059669',
-                            dark: '#065F46',
-                            border: '#A7F3D0'
-                        },
-                        r3: {
-                            light: '#FFFBEB',
-                            DEFAULT: '#D97706',
-                            dark: '#92400E',
-                            border: '#FDE68A'
-                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Animazioni e micro-interazioni */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
@@ -56,12 +35,10 @@
         .animate-fade-in {
             animation: fadeIn 0.25s ease-out forwards;
         }
-        /* Nascondi scrollbar orizzontale su mobile */
         body {
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
-        /* Stile personalizzato per i giorni del calendario */
         .calendar-day {
             aspect-ratio: 1 / 1.05;
         }
@@ -102,59 +79,43 @@
     <!-- Main Container -->
     <main class="max-w-4xl mx-auto px-4 pt-5 space-y-6">
 
-        <!-- SEZIONE 1: SALDO FIRME DISPONIBILI -->
+        <!-- SEZIONE 1: SALDO FIRME DISPONIBILI DEL MESE -->
         <section class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
             <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <div class="flex items-center gap-2">
                     <i data-lucide="ticket" class="w-5 h-5 text-indigo-600"></i>
-                    <h2 class="font-bold text-slate-800 text-base">Saldo Firme Disponibili</h2>
+                    <h2 class="font-bold text-slate-800 text-base">Plafond Firme Mensile</h2>
                 </div>
-                
-                <!-- Switch Modalità Saldo (Globale vs Per Ristorante) -->
-                <div class="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-semibold">
-                    <button id="mode-global-btn" onclick="setBalanceMode('global')" class="px-3 py-1.5 rounded-lg transition shadow-sm bg-white text-indigo-600">
-                        Condiviso
-                    </button>
-                    <button id="mode-split-btn" onclick="setBalanceMode('split')" class="px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900">
-                        Per Ristorante
-                    </button>
-                </div>
+                <span id="balance-month-badge" class="text-xs font-bold capitalize bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full border border-indigo-200/70">
+                    Novembre 2026 (30 gg)
+                </span>
             </div>
 
-            <!-- Vista Saldo GLOBALE -->
-            <div id="balance-global-view" class="space-y-4">
-                <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
-                    <div>
-                        <p class="text-slate-300 text-xs uppercase tracking-wider font-semibold mb-1">Firme Rimanenti Totali</p>
-                        <div class="flex items-baseline gap-3">
-                            <span id="global-remaining" class="text-4xl sm:text-5xl font-extrabold tracking-tight">0</span>
-                            <span class="text-slate-400 text-sm font-medium">su <span id="global-total" class="text-white font-semibold">0</span> caricate</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
-                            <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
-                            Firme già utilizzate: <strong id="global-used" class="text-slate-200">0</strong>
-                        </p>
+            <!-- Vista Saldo Mensile Automatico (2 firme al giorno: 1 pranzo + 1 cena) -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-5 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
+                <div>
+                    <p class="text-slate-300 text-xs uppercase tracking-wider font-semibold mb-1">Firme Rimanenti nel Mese</p>
+                    <div class="flex items-baseline gap-3">
+                        <span id="global-remaining" class="text-4xl sm:text-5xl font-extrabold tracking-tight">60</span>
+                        <span class="text-slate-400 text-sm font-medium">su <span id="global-total" class="text-white font-semibold">60</span> disponibili</span>
                     </div>
-                    
-                    <div class="flex sm:flex-col gap-2">
-                        <button onclick="openRechargeModal()" class="flex-1 sm:flex-none bg-indigo-500 hover:bg-indigo-400 active:bg-indigo-600 text-white font-semibold px-4 py-3 rounded-xl shadow-sm transition flex items-center justify-center gap-2 text-sm">
-                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                            <span>Ricarica Firme</span>
-                        </button>
-                    </div>
+                    <p class="text-xs text-slate-400 mt-2 flex items-center gap-1.5">
+                        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+                        Usate nel mese: <strong id="global-used" class="text-slate-200">0</strong>
+                        <span class="text-slate-500">•</span>
+                        <span>2 al giorno (1 pranzo + 1 cena)</span>
+                    </p>
                 </div>
-            </div>
 
-            <!-- Vista Saldo SEPARATO PER RISTORANTE -->
-            <div id="balance-split-view" class="hidden space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="split-cards-container">
-                    <!-- Popolato via JS -->
-                </div>
-                <div class="flex justify-end">
-                    <button onclick="openRechargeModal()" class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center justify-center gap-2 text-sm">
-                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                        <span>Ricarica Pacchetto Firme</span>
-                    </button>
+                <div class="bg-white/10 rounded-xl px-4 py-3 text-xs text-slate-200 border border-white/10 shrink-0">
+                    <div class="flex items-center justify-between sm:justify-start gap-3 mb-1">
+                        <span class="text-slate-400">Giorni mese:</span>
+                        <strong id="balance-days-count" class="text-white">30</strong>
+                    </div>
+                    <div class="flex items-center justify-between sm:justify-start gap-3">
+                        <span class="text-slate-400">Regola:</span>
+                        <strong class="text-emerald-300">2 firme/giorno</strong>
+                    </div>
                 </div>
             </div>
         </section>
@@ -170,7 +131,7 @@
             </div>
 
             <form id="checkin-form" onsubmit="handleCheckIn(event)" class="space-y-4">
-                <!-- Selezione Ristorante (3 pulsanti grandi touch-friendly) -->
+                <!-- Selezione Ristorante -->
                 <div>
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">1. Scegli il Ristorante</label>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5" id="restaurant-selector">
@@ -183,10 +144,8 @@
                     <!-- Data -->
                     <div class="sm:col-span-4">
                         <label for="checkin-date" class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">2. Data</label>
-                        <div class="relative">
-                            <input type="date" id="checkin-date" required
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
-                        </div>
+                        <input type="date" id="checkin-date" required
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
                     </div>
 
                     <!-- Fascia (Pranzo / Cena) -->
@@ -342,56 +301,7 @@
     </div>
 
     <!-- =====================================================================
-         MODALE 2: RICARICA FIRME
-         ===================================================================== -->
-    <div id="recharge-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 hidden items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-5 shadow-xl animate-fade-in">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-900">Ricarica Firme</h3>
-                </div>
-                <button onclick="closeModal('recharge-modal')" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <div class="py-4 space-y-4">
-                <!-- Selettore destinazione ricarica (visibile se modalità "Per Ristorante") -->
-                <div id="recharge-target-wrapper" class="hidden">
-                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1.5">Ristorante da ricaricare</label>
-                    <select id="recharge-restaurant-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <!-- Opzioni popolate via JS -->
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">Pacchetti Rapidi</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button type="button" onclick="applyQuickRecharge(5)" class="py-2.5 px-3 rounded-xl border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-indigo-700 font-bold text-sm transition">+5 Firme</button>
-                        <button type="button" onclick="applyQuickRecharge(10)" class="py-2.5 px-3 rounded-xl border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-indigo-700 font-bold text-sm transition">+10 Firme</button>
-                        <button type="button" onclick="applyQuickRecharge(20)" class="py-2.5 px-3 rounded-xl border border-indigo-200 bg-indigo-50/60 hover:bg-indigo-100 text-indigo-700 font-bold text-sm transition">+20 Firme</button>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="custom-recharge-amount" class="block text-xs font-semibold text-slate-500 uppercase mb-1.5">Oppure inserisci quantità manuale</label>
-                    <div class="flex gap-2">
-                        <input type="number" id="custom-recharge-amount" placeholder="Es. 15 (usa - per scalare)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <button type="button" onclick="applyCustomRecharge()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition">
-                            Applica
-                        </button>
-                    </div>
-                    <p class="text-[11px] text-slate-400 mt-1.5">Suggerimento: puoi inserire anche un numero negativo (es. -2) per correggere il totale.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- =====================================================================
-         MODALE 3: IMPOSTAZIONI RISTORANTI E BACKUP DATI
+         MODALE 2: IMPOSTAZIONI RISTORANTI E BACKUP DATI
          ===================================================================== -->
     <div id="settings-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-40 hidden items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-5 shadow-xl animate-fade-in max-h-[90vh] overflow-y-auto">
@@ -452,46 +362,41 @@
         const STORAGE_KEY = 'firme_ristoranti_app_v1';
 
         const DEFAULT_STATE = {
-            balanceMode: 'global', // 'global' | 'split'
-            globalLoaded: 20,      // Firme caricate nel monte globale
             restaurants: [
-                { id: 'r1', name: 'Grotta Marinara', color: 'indigo', hex: '#4F46E5', bgLight: '#EEF2FF', textDark: '#3730A3', border: '#C7D2FE', loaded: 10 },
-                { id: 'r2', name: 'Zio Gianfester', color: 'emerald', hex: '#059669', bgLight: '#ECFDF5', textDark: '#065F46', border: '#A7F3D0', loaded: 10 },
-                { id: 'r3', name: 'Meridiano 2.0 / Holiday', color: 'amber', hex: '#D97706', bgLight: '#FFFBEB', textDark: '#92400E', border: '#FDE68A', loaded: 10 }
+                { id: 'r1', name: 'Grotta Marinara', color: 'indigo', hex: '#4F46E5', bgLight: '#EEF2FF', textDark: '#3730A3', border: '#C7D2FE' },
+                { id: 'r2', name: 'Zio Gianfester', color: 'emerald', hex: '#059669', bgLight: '#ECFDF5', textDark: '#065F46', border: '#A7F3D0' },
+                { id: 'r3', name: 'Meridiano 2.0 / Holiday', color: 'amber', hex: '#D97706', bgLight: '#FFFBEB', textDark: '#92400E', border: '#FDE68A' }
             ],
             selectedRestaurantId: 'r1',
             entries: [] // { id, restaurantId, date: 'YYYY-MM-DD', meal: 'Pranzo'|'Cena', note: '', timestamp }
         };
 
         let appState = loadState();
-        let currentCalendarDate = new Date(); // Mese attualmente visualizzato nel calendario
+        let currentCalendarDate = new Date();
         let resetConfirmTimeout = null;
 
-        // =========================================================================
-        // PERSISTENZA (LOCALSTORAGE)
-        // =========================================================================
         function loadState() {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY);
                 if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
                 const parsed = JSON.parse(raw);
-                
-                // Aggiorna automaticamente i nomi se erano rimasti quelli generici ("Ristorante 1", ecc.)
-                const mergedRestaurants = (parsed.restaurants || DEFAULT_STATE.restaurants).map((r, idx) => {
-                    const def = DEFAULT_STATE.restaurants[idx];
-                    if (def && (!r.name || r.name === `Ristorante ${idx + 1}`)) {
-                        return { ...def, ...r, name: def.name };
-                    }
-                    return r;
-                });
+
+                // Migrazione automatica nomi vecchi di default se presenti
+                const legacyNames = ['Ristorante 1 (Centro)', 'Ristorante 2 (Pizzeria)', 'Ristorante 3 (Trattoria)'];
+                if (Array.isArray(parsed.restaurants)) {
+                    parsed.restaurants.forEach((r, idx) => {
+                        if (legacyNames.includes(r.name) && DEFAULT_STATE.restaurants[idx]) {
+                            r.name = DEFAULT_STATE.restaurants[idx].name;
+                        }
+                    });
+                }
 
                 return {
                     ...JSON.parse(JSON.stringify(DEFAULT_STATE)),
-                    ...parsed,
-                    restaurants: mergedRestaurants
+                    ...parsed
                 };
             } catch (e) {
-                console.error('Errore nel caricamento da localStorage:', e);
+                console.error('Errore caricamento dati:', e);
                 return JSON.parse(JSON.stringify(DEFAULT_STATE));
             }
         }
@@ -500,32 +405,52 @@
             try {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
             } catch (e) {
-                showToast('Errore nel salvataggio locale dei dati', 'error');
+                showToast('Errore nel salvataggio locale', 'error');
             }
         }
 
         // =========================================================================
-        // NOTIFICHE TOAST (NO ALERT)
+        // UTILITÀ DATE E NOTIFICHE TOAST
         // =========================================================================
+        function getTodayISO() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function formatDisplayDate(isoDate) {
+            const [y, m, d] = isoDate.split('-').map(Number);
+            const date = new Date(y, m - 1, d);
+            return date.toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        function formatFullItalianDate(isoDate) {
+            const [y, m, d] = isoDate.split('-').map(Number);
+            const date = new Date(y, m - 1, d);
+            return date.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             
-            const colors = {
+            const styles = {
                 success: 'bg-slate-900 text-white border-slate-700',
-                error: 'bg-rose-600 text-white border-rose-500',
-                warning: 'bg-amber-500 text-white border-amber-400'
+                warning: 'bg-amber-600 text-white border-amber-500',
+                error: 'bg-rose-600 text-white border-rose-500'
             };
 
             const icons = {
-                success: 'check-circle',
-                error: 'alert-circle',
-                warning: 'alert-triangle'
+                success: 'check-circle-2',
+                warning: 'alert-triangle',
+                error: 'x-circle'
             };
 
-            toast.className = `${colors[type] || colors.success} border px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-medium pointer-events-auto animate-fade-in`;
+            toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-lg border text-sm font-medium animate-fade-in ${styles[type] || styles.success}`;
             toast.innerHTML = `
-                <i data-lucide="${icons[type] || 'info'}" class="w-4 h-4 shrink-0"></i>
+                <i data-lucide="${icons[type] || icons.success}" class="w-4 h-4 shrink-0"></i>
                 <span class="flex-1">${message}</span>
             `;
 
@@ -534,139 +459,39 @@
 
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-8px)';
-                toast.style.transition = 'all 0.25s ease';
-                setTimeout(() => toast.remove(), 250);
+                toast.style.transform = 'translateY(-6px)';
+                toast.style.transition = 'all 0.2s ease';
+                setTimeout(() => toast.remove(), 220);
             }, 3000);
         }
 
         // =========================================================================
-        // UTILITÀ DATE
+        // CALCOLO SALDO MENSILE AUTOMATICO (2 FIRME AL GIORNO: PRANZO + CENA)
         // =========================================================================
-        function getTodayISO() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        function formatDisplayDate(isoDate) {
-            const [y, m, d] = isoDate.split('-').map(Number);
-            const dateObj = new Date(y, m - 1, d);
-            return dateObj.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
-        }
-
-        function formatFullItalianDate(isoDate) {
-            const [y, m, d] = isoDate.split('-').map(Number);
-            const dateObj = new Date(y, m - 1, d);
-            return dateObj.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        }
-
-        // =========================================================================
-        // GESTIONE SALDO E RICARICHE
-        // =========================================================================
-        function setBalanceMode(mode) {
-            appState.balanceMode = mode;
-            saveState();
-            renderBalanceSection();
+        function getMonthlyStats(year, monthIndex) {
+            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+            const totalAvailable = daysInMonth * 2; // 1 pranzo + 1 cena al giorno
+            const monthPrefix = `${year}-${String(monthIndex + 1).padStart(2, '0')}-`;
+            const used = appState.entries.filter(e => e.date.startsWith(monthPrefix)).length;
+            const remaining = totalAvailable - used;
+            return { daysInMonth, totalAvailable, used, remaining, monthPrefix };
         }
 
         function renderBalanceSection() {
-            const globalBtn = document.getElementById('mode-global-btn');
-            const splitBtn = document.getElementById('mode-split-btn');
-            const globalView = document.getElementById('balance-global-view');
-            const splitView = document.getElementById('balance-split-view');
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            const stats = getMonthlyStats(year, month);
 
-            if (appState.balanceMode === 'global') {
-                globalBtn.className = 'px-3 py-1.5 rounded-lg transition shadow-sm bg-white text-indigo-600';
-                splitBtn.className = 'px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900';
-                globalView.classList.remove('hidden');
-                splitView.classList.add('hidden');
+            const monthLabel = new Date(year, month, 1).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
+            document.getElementById('balance-month-badge').textContent = `${monthLabel} (${stats.daysInMonth} gg)`;
+            document.getElementById('balance-days-count').textContent = `${stats.daysInMonth} giorni`;
 
-                const used = appState.entries.length;
-                const total = appState.globalLoaded;
-                const remaining = total - used;
+            const remEl = document.getElementById('global-remaining');
+            remEl.textContent = stats.remaining;
+            remEl.className = `text-4xl sm:text-5xl font-extrabold tracking-tight ${stats.remaining <= 2 ? 'text-rose-400' : 'text-white'}`;
 
-                const remEl = document.getElementById('global-remaining');
-                remEl.textContent = remaining;
-                remEl.className = `text-4xl sm:text-5xl font-extrabold tracking-tight ${remaining <= 2 ? 'text-rose-400' : 'text-white'}`;
-                
-                document.getElementById('global-total').textContent = total;
-                document.getElementById('global-used').textContent = used;
-            } else {
-                splitBtn.className = 'px-3 py-1.5 rounded-lg transition shadow-sm bg-white text-indigo-600';
-                globalBtn.className = 'px-3 py-1.5 rounded-lg transition text-slate-600 hover:text-slate-900';
-                splitView.classList.remove('hidden');
-                globalView.classList.add('hidden');
-
-                const container = document.getElementById('split-cards-container');
-                container.innerHTML = appState.restaurants.map(rest => {
-                    const used = appState.entries.filter(e => e.restaurantId === rest.id).length;
-                    const remaining = rest.loaded - used;
-                    return `
-                        <div class="rounded-xl p-4 border transition" style="background-color: ${rest.bgLight}; border-color: ${rest.border}">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="font-bold text-sm truncate" style="color: ${rest.textDark}">${rest.name}</span>
-                                <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${rest.hex}"></span>
-                            </div>
-                            <div class="flex items-baseline gap-2 mt-2">
-                                <span class="text-3xl font-extrabold ${remaining <= 1 ? 'text-rose-600' : ''}" style="${remaining > 1 ? `color: ${rest.textDark}` : ''}">${remaining}</span>
-                                <span class="text-xs font-medium text-slate-500">rimaste (su ${rest.loaded})</span>
-                            </div>
-                            <p class="text-[11px] text-slate-500 mt-1">Usate: <strong>${used}</strong></p>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
-        function openRechargeModal() {
-            const targetWrapper = document.getElementById('recharge-target-wrapper');
-            const select = document.getElementById('recharge-restaurant-select');
-            
-            if (appState.balanceMode === 'split') {
-                targetWrapper.classList.remove('hidden');
-                select.innerHTML = appState.restaurants.map(r => 
-                    `<option value="${r.id}">${r.name}</option>`
-                ).join('');
-            } else {
-                targetWrapper.classList.add('hidden');
-            }
-
-            document.getElementById('custom-recharge-amount').value = '';
-            openModal('recharge-modal');
-        }
-
-        function applyQuickRecharge(amount) {
-            processRecharge(amount);
-        }
-
-        function applyCustomRecharge() {
-            const input = document.getElementById('custom-recharge-amount');
-            const val = parseInt(input.value, 10);
-            if (isNaN(val) || val === 0) {
-                showToast('Inserisci un numero valido diverso da 0', 'warning');
-                return;
-            }
-            processRecharge(val);
-        }
-
-        function processRecharge(amount) {
-            if (appState.balanceMode === 'global') {
-                appState.globalLoaded = Math.max(0, appState.globalLoaded + amount);
-                showToast(amount > 0 ? `Aggiunte +${amount} firme al saldo globale!` : `Rimosse ${Math.abs(amount)} firme dal saldo.`);
-            } else {
-                const restId = document.getElementById('recharge-restaurant-select').value;
-                const rest = appState.restaurants.find(r => r.id === restId);
-                if (rest) {
-                    rest.loaded = Math.max(0, rest.loaded + amount);
-                    showToast(amount > 0 ? `+${amount} firme caricate su ${rest.name}!` : `Aggiornato saldo di ${rest.name}.`);
-                }
-            }
-            saveState();
-            renderBalanceSection();
-            closeModal('recharge-modal');
+            document.getElementById('global-total').textContent = stats.totalAvailable;
+            document.getElementById('global-used').textContent = stats.used;
         }
 
         // =========================================================================
@@ -710,14 +535,17 @@
                 return;
             }
 
-            // Controllo saldo disponibile (avvisa se va in negativo ma permette comunque la registrazione)
-            let remaining = 0;
-            if (appState.balanceMode === 'global') {
-                remaining = appState.globalLoaded - appState.entries.length;
-            } else {
-                const usedForRest = appState.entries.filter(e => e.restaurantId === rest.id).length;
-                remaining = rest.loaded - usedForRest;
+            // Controllo se nella stessa data esiste già una firma per lo stesso pasto (Pranzo o Cena)
+            const duplicateMeal = appState.entries.find(e => e.date === dateVal && e.meal === mealVal);
+            if (duplicateMeal) {
+                const existingRest = appState.restaurants.find(r => r.id === duplicateMeal.restaurantId);
+                showToast(`Hai già registrato ${mealVal} il ${formatDisplayDate(dateVal)} (${existingRest ? existingRest.name : ''})!`, 'warning');
+                return;
             }
+
+            // Calcolo saldo del mese della data selezionata
+            const [y, m] = dateVal.split('-').map(Number);
+            const monthStats = getMonthlyStats(y, m - 1);
 
             const newEntry = {
                 id: 'entry_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
@@ -729,36 +557,29 @@
             };
 
             appState.entries.push(newEntry);
-            // Ordina per data decrescente e poi per timestamp decrescente
             appState.entries.sort((a, b) => b.date.localeCompare(a.date) || b.timestamp - a.timestamp);
 
             saveState();
 
-            // Reset campo nota
             document.getElementById('checkin-note').value = '';
-
-            // Sincronizza vista calendario sul mese della firma registrata
-            const [y, m] = dateVal.split('-').map(Number);
             currentCalendarDate = new Date(y, m - 1, 1);
 
             renderAll();
 
-            if (remaining <= 0) {
-                showToast(`Firma registrata su ${rest.name} (Attenzione: saldo esaurito!)`, 'warning');
+            if (monthStats.remaining - 1 <= 0) {
+                showToast(`Firma registrata su ${rest.name} (Plafond mensile completato!)`, 'warning');
             } else {
-                showToast(`Firma scalata per ${rest.name} (${mealVal})`);
+                showToast(`Firma registrata per ${rest.name} (${mealVal})`);
             }
         }
 
         function deleteEntry(entryId) {
             const idx = appState.entries.findIndex(e => e.id === entryId);
             if (idx === -1) return;
-
-            const removed = appState.entries[idx];
             appState.entries.splice(idx, 1);
             saveState();
             renderAll();
-            showToast('Firma annullata e riaccreditata nel saldo!');
+            showToast('Firma annullata e riaccreditata nel saldo');
         }
 
         // =========================================================================
@@ -766,11 +587,13 @@
         // =========================================================================
         function changeMonth(delta) {
             currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderBalanceSection();
             renderCalendar();
         }
 
         function goToToday() {
             currentCalendarDate = new Date();
+            renderBalanceSection();
             renderCalendar();
         }
 
@@ -778,11 +601,9 @@
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
 
-            // Etichetta Mese e Anno
             const monthName = new Date(year, month, 1).toLocaleDateString('it-IT', { month: 'long', year: 'numeric' });
             document.getElementById('calendar-month-label').textContent = monthName;
 
-            // Legenda Ristoranti
             const legendEl = document.getElementById('calendar-legend');
             legendEl.innerHTML = appState.restaurants.map(r => `
                 <div class="flex items-center gap-1.5">
@@ -791,13 +612,11 @@
                 </div>
             `).join('');
 
-            // Calcolo primo giorno del mese (Lunedì = 0 ... Domenica = 6)
             const firstDayOfMonth = new Date(year, month, 1).getDay();
             const startOffset = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const todayISO = getTodayISO();
 
-            // Mappa veloce delle firme per data: { 'YYYY-MM-DD': [entry1, entry2] }
             const entriesByDate = {};
             appState.entries.forEach(entry => {
                 if (!entriesByDate[entry.date]) entriesByDate[entry.date] = [];
@@ -807,19 +626,16 @@
             const grid = document.getElementById('calendar-grid');
             let html = '';
 
-            // Celle vuote iniziali
             for (let i = 0; i < startOffset; i++) {
                 html += `<div class="calendar-day rounded-xl bg-slate-50/50"></div>`;
             }
 
-            // Celle dei giorni del mese
             for (let day = 1; day <= daysInMonth; day++) {
                 const isoDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayEntries = entriesByDate[isoDate] || [];
                 const isToday = isoDate === todayISO;
                 const hasEntries = dayEntries.length > 0;
 
-                // Genera pallini/badge dei ristoranti per questo giorno
                 const dotsHtml = dayEntries.map(entry => {
                     const rest = appState.restaurants.find(r => r.id === entry.restaurantId) || appState.restaurants[0];
                     return `
@@ -893,7 +709,6 @@
                 }).join('');
             }
 
-            // Configura pulsante per aggiungere firma direttamente su questa data
             addBtn.onclick = () => {
                 closeModal('day-modal');
                 const dateInput = document.getElementById('checkin-date');
@@ -909,7 +724,7 @@
 
         function deleteEntryFromDayModal(entryId, isoDate) {
             deleteEntry(entryId);
-            openDayModal(isoDate); // Aggiorna la modale aperta
+            openDayModal(isoDate);
         }
 
         // =========================================================================
@@ -920,7 +735,6 @@
             document.getElementById('stats-total-meals').textContent = totalMeals;
             document.getElementById('history-count-badge').textContent = totalMeals;
 
-            // 1. Barre Ripartizione Ristoranti
             const statsContainer = document.getElementById('stats-container');
             statsContainer.innerHTML = appState.restaurants.map(rest => {
                 const count = appState.entries.filter(e => e.restaurantId === rest.id).length;
@@ -942,7 +756,6 @@
                 `;
             }).join('');
 
-            // 2. Lista Storico Recente
             const historyList = document.getElementById('history-list');
             if (totalMeals === 0) {
                 historyList.innerHTML = `
@@ -996,7 +809,6 @@
                 </div>
             `).join('');
 
-            // Ripristina stato pulsante reset
             resetResetButton();
             openModal('settings-modal');
         }
@@ -1005,11 +817,7 @@
             appState.restaurants.forEach((rest, idx) => {
                 const input = document.getElementById(`edit-rest-name-${rest.id}`);
                 const newName = input.value.trim();
-                if (newName) {
-                    rest.name = newName;
-                } else {
-                    rest.name = `Ristorante ${idx + 1}`;
-                }
+                rest.name = newName || `Ristorante ${idx + 1}`;
             });
             saveState();
             renderAll();
@@ -1058,7 +866,6 @@
             reader.readAsText(file);
         }
 
-        // Doppia conferma inline senza window.confirm()
         let resetArmed = false;
         function handleResetConfirm() {
             const btn = document.getElementById('reset-btn');
@@ -1105,9 +912,8 @@
             modal.classList.remove('flex');
         }
 
-        // Chiudi modali cliccando sullo sfondo
         window.addEventListener('click', (e) => {
-            ['day-modal', 'recharge-modal', 'settings-modal'].forEach(id => {
+            ['day-modal', 'settings-modal'].forEach(id => {
                 const modal = document.getElementById(id);
                 if (e.target === modal) closeModal(id);
             });
@@ -1128,7 +934,6 @@
             document.getElementById('checkin-date').value = getTodayISO();
             renderAll();
 
-            // Registrazione Service Worker per supporto PWA / APK
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js').catch(() => {});
             }
